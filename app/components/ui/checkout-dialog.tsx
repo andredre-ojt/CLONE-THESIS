@@ -32,7 +32,21 @@ export function CheckoutDialog({ open, onClose, onComplete, total, items, onAddT
     const [processing, setProcessing] = useState(false)
     const [success, setSuccess] = useState(false)
 
-    const change = paymentMethod === "cash" ? Math.max(0, Number.parseFloat(cashReceived || "0") - total) : 0
+    const getCashAmount = () => {
+        return Number.parseFloat(cashReceived || "0")
+    }
+
+    const calculateChange = () => {
+        if (paymentMethod !== "cash") return 0
+        const cash = getCashAmount()
+        return Math.max(0, cash - total)
+    }
+
+    const isSufficientCash = () => {
+        return getCashAmount() >= total
+    }
+
+    const change = calculateChange()
 
     const handleComplete = async () => {
         setProcessing(true)
@@ -117,11 +131,11 @@ export function CheckoutDialog({ open, onClose, onComplete, total, items, onAddT
                                         className="mt-1.5"
                                     />
                                 </div>
-                                {cashReceived && Number.parseFloat(cashReceived) >= total && (
+                                {cashReceived && isSufficientCash() && (
                                     <div className="rounded-lg bg-secondary p-3">
                                         <div className="flex justify-between text-sm">
                                             <span className="text-muted-foreground">Change Due</span>
-                                            <span className="text-lg font-semibold text-accent">${change.toFixed(2)}</span>
+                                            <span className="text-lg font-semibold text-accent">₱{change.toFixed(2)}</span>
                                         </div>
                                     </div>
                                 )}
@@ -131,7 +145,7 @@ export function CheckoutDialog({ open, onClose, onComplete, total, items, onAddT
                         <div className="rounded-lg border bg-muted/30 p-4">
                             <div className="flex justify-between">
                                 <span className="text-lg font-medium">Total Amount</span>
-                                <span className="text-2xl font-bold text-primary">${total.toFixed(2)}</span>
+                                <span className="text-2xl font-bold text-primary">₱{total.toFixed(2)}</span>
                             </div>
                         </div>
 
@@ -139,7 +153,7 @@ export function CheckoutDialog({ open, onClose, onComplete, total, items, onAddT
                             className="w-full"
                             size="lg"
                             onClick={handleComplete}
-                            disabled={processing || (paymentMethod === "cash" && Number.parseFloat(cashReceived || "0") < total)}
+                            disabled={processing || (paymentMethod === "cash" && !isSufficientCash())}
                         >
                             {processing ? "Processing..." : "Complete Payment"}
                         </Button>

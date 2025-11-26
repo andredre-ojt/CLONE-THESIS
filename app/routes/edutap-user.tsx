@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Bell, ShoppingBag, BookOpen, AlertCircle, Clock, History, LogIn, Share2, Wallet } from "lucide-react"
+import { Bell, ShoppingBag, BookOpen, AlertCircle, Clock, History, LogOut, Share2, Wallet } from "lucide-react"
 
 interface Notification {
     id: string
@@ -23,7 +23,7 @@ interface Activity {
 
 export default function ParentDashboard() {
     const [currentTime, setCurrentTime] = useState("")
-    const [balance] = useState(102.00)
+    const [balance] = useState(333.00)
     const [selectedPayment, setSelectedPayment] = useState<string | null>(null)
 
     const notifications: Notification[] = [
@@ -56,6 +56,15 @@ export default function ParentDashboard() {
         { id: "paymaya", name: "PayMaya", icon: "💳" },
         { id: "gotyme", name: "GoTyme", icon: "🏦" }
     ]
+
+    const handleLogout = () => {
+        // Clear user data from localStorage
+        localStorage.removeItem("username")
+        localStorage.removeItem("role")
+
+        // Redirect to login page
+        window.location.href = "/login"
+    }
 
     useEffect(() => {
         const updateTime = () => {
@@ -98,10 +107,14 @@ export default function ParentDashboard() {
                         <History className="h-4 w-4" />
                         History
                     </button>
-                    <button className="flex items-center gap-2 rounded-lg border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-50">
-                        <LogIn className="h-4 w-4" />
-                        Login
-                    </button>
+                    <button
+
+                        onClick={handleLogout}
+                        className="flex items-center gap-2 rounded-lg border border-red-300 px-4 py-2 text-sm font-semibold text-red-600 transition hover:bg-red-50 hover:border-red-400"
+                    >
+                        <LogOut className="h-4 w-4" />
+                        Logout
+                    </button >
                     <button className="flex items-center gap-2 rounded-lg border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-50">
                         <Share2 className="h-4 w-4" />
                     </button>

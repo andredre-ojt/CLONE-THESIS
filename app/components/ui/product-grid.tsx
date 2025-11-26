@@ -6,6 +6,7 @@ import { Badge } from "./badge"
 import { Input } from "./input"
 import { Button } from "./button"
 import { Card } from "./card"
+
 interface Product {
     id: string
     name: string
@@ -88,7 +89,7 @@ export function ProductGrid({ onAddToCart }: ProductGridProps) {
                                     {product.category}
                                 </Badge>
                                 <h3 className="mb-1 font-medium text-card-foreground">{product.name}</h3>
-                                <p className="text-lg font-semibold text-primary">${product.price.toFixed(2)}</p>
+                                <p className="text-lg font-semibold text-primary">₱{product.price.toFixed(2)}</p>
                             </div>
                         </Card>
                     ))}

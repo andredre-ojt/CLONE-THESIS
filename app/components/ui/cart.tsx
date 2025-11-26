@@ -66,7 +66,7 @@ export function Cart({ items, onRemoveItem, onUpdateQuantity, onClearCart, onAdd
                                         </div>
                                         <div className="flex-1">
                                             <h3 className="font-medium text-card-foreground">{item.name}</h3>
-                                            <p className="text-sm font-semibold text-primary">${item.price.toFixed(2)}</p>
+                                            <p className="text-sm font-semibold text-primary">₱{item.price.toFixed(2)}</p>
                                         </div>
                                         <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onRemoveItem(item.id)}>
                                             <Trash2 className="h-4 w-4" />
@@ -92,7 +92,7 @@ export function Cart({ items, onRemoveItem, onUpdateQuantity, onClearCart, onAdd
                                                 <Plus className="h-3 w-3" />
                                             </Button>
                                         </div>
-                                        <p className="font-semibold">${(item.price * item.quantity).toFixed(2)}</p>
+                                        <p className="font-semibold">₱{(item.price * item.quantity).toFixed(2)}</p>
                                     </div>
                                 </Card>
                             ))}
@@ -104,16 +104,16 @@ export function Cart({ items, onRemoveItem, onUpdateQuantity, onClearCart, onAdd
                     <div className="space-y-2 text-sm">
                         <div className="flex justify-between">
                             <span className="text-muted-foreground">Subtotal</span>
-                            <span className="font-medium">${subtotal.toFixed(2)}</span>
+                            <span className="font-medium">₱{subtotal.toFixed(2)}</span>
                         </div>
                         <div className="flex justify-between">
                             <span className="text-muted-foreground">Tax (8%)</span>
-                            <span className="font-medium">${tax.toFixed(2)}</span>
+                            <span className="font-medium">₱{tax.toFixed(2)}</span>
                         </div>
                         <Separator />
                         <div className="flex justify-between text-lg">
                             <span className="font-semibold">Total</span>
-                            <span className="font-bold text-primary">${total.toFixed(2)}</span>
+                            <span className="font-bold text-primary">₱{total.toFixed(2)}</span>
                         </div>
                     </div>
 

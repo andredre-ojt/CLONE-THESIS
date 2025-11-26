@@ -55,7 +55,7 @@ export function TransactionHistory({ transactions, onClose }: TransactionHistory
                                 <div className="mb-4 flex items-start justify-between">
                                     <div>
                                         <p className="text-sm text-muted-foreground">{new Date(transaction.timestamp).toLocaleString()}</p>
-                                        <p className="mt-1 text-2xl font-bold text-primary">${transaction.total.toFixed(2)}</p>
+                                        <p className="mt-1 text-2xl font-bold text-primary">₱{transaction.total.toFixed(2)}</p>
                                     </div>
                                     <Badge variant="secondary" className="gap-1.5">
                                         {transaction.paymentMethod === "card" ? (
@@ -73,7 +73,7 @@ export function TransactionHistory({ transactions, onClose }: TransactionHistory
                                             <span className="text-muted-foreground">
                                                 {item.quantity}x {item.name}
                                             </span>
-                                            <span className="font-medium">${(item.price * item.quantity).toFixed(2)}</span>
+                                            <span className="font-medium">₱{(item.price * item.quantity).toFixed(2)}</span>
                                         </div>
                                     ))}
                                 </div>
@@ -81,7 +81,7 @@ export function TransactionHistory({ transactions, onClose }: TransactionHistory
                                 {transaction.change > 0 && (
                                     <div className="mt-4 flex justify-between border-t pt-4 text-sm">
                                         <span className="text-muted-foreground">Change Given</span>
-                                        <span className="font-medium text-accent">${transaction.change.toFixed(2)}</span>
+                                        <span className="font-medium text-accent">₱{transaction.change.toFixed(2)}</span>
                                     </div>
                                 )}
                             </Card>
