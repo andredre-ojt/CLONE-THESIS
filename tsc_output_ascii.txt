@@ -1,0 +1,8 @@
+app/components/ui/product-grid.tsx(86,40): error TS2322: Type '{ children: string; variant: string; className: string; }' is not assignable to type 'IntrinsicAttributes & Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>'.
+  Property 'variant' does not exist on type 'IntrinsicAttributes & Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>'.
+app/routes/page.tsx(4,29): error TS2307: Cannot find module '../components/product-grid' or its corresponding type declarations.
+app/routes/page.tsx(5,22): error TS2307: Cannot find module '../components/cart' or its corresponding type declarations.
+app/routes/page.tsx(6,24): error TS2307: Cannot find module '../components/header' or its corresponding type declarations.
+app/routes/page.tsx(7,36): error TS2307: Cannot find module '../components/transaction-history' or its corresponding type declarations.
+app/routes/page.tsx(8,27): error TS2307: Cannot find module '../components/login-form' or its corresponding type declarations.
+app/services/auth-service.ts(2,31): error TS2307: Cannot find module '~/configs/endpoint' or its corresponding type declarations.
