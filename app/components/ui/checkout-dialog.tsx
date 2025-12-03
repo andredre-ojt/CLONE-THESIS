@@ -131,12 +131,21 @@ export function CheckoutDialog({ open, onClose, onComplete, total, items, onAddT
                                         className="mt-1.5"
                                     />
                                 </div>
-                                {cashReceived && isSufficientCash() && (
-                                    <div className="rounded-lg bg-secondary p-3">
-                                        <div className="flex justify-between text-sm">
-                                            <span className="text-muted-foreground">Change Due</span>
-                                            <span className="text-lg font-semibold text-accent">₱{change.toFixed(2)}</span>
-                                        </div>
+                                {cashReceived && (
+                                    <div className={`rounded-lg p-3 ${isSufficientCash() ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'}`}>
+                                        {isSufficientCash() ? (
+                                            <div className="flex justify-between">
+                                                <span className="font-semibold text-green-700">Change Due</span>
+                                                <span className="text-xl font-bold text-green-700">₱{change.toFixed(2)}</span>
+                                            </div>
+                                        ) : (
+                                            <div className="flex justify-between items-center">
+                                                <span className="text-sm text-red-700">Insufficient amount</span>
+                                                <span className="text-sm font-medium text-red-700">
+                                                    Need ₱{(total - getCashAmount()).toFixed(2)} more
+                                                </span>
+                                            </div>
+                                        )}
                                     </div>
                                 )}
                             </div>
