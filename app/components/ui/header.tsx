@@ -9,6 +9,11 @@ interface HeaderProps {
     onShowHistory: () => void
     onShowUserPage?: () => void
 }
+const handleLogout = () => {
+    localStorage.removeItem("username")
+    localStorage.removeItem("role")
+    window.location.href = "/"
+}
 
 export function Header({ user, onLogout, onShowHistory, onShowUserPage }: HeaderProps) {
     const currentTime = new Date().toLocaleTimeString("en-US", {
@@ -49,10 +54,13 @@ export function Header({ user, onLogout, onShowHistory, onShowUserPage }: Header
                     <History className="mr-2 h-4 w-4" />
                     History
                 </Button>
-                <Button variant="outline" size="sm" onClick={onLogout}>
-                    <LogOut className="mr-2 h-4 w-4" />
-                    Logout
-                </Button>
+                <button
+                    onClick={handleLogout}
+                    className="flex items-center gap-2 rounded-lg border border-red-300 px-4 py-2 text-sm font-semibold text-red-600 transition hover:bg-red-50 hover:border-red-400"
+                >
+                    <LogOut className="w-4 h-4" />
+                    <span>Logout</span>
+                </button>
             </div>
         </header>
     )

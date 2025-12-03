@@ -28,6 +28,7 @@ interface Transaction {
     change: number
 }
 
+
 export default function POSPage() {
     const [showHistory, setShowHistory] = useState(false)
     const [cartItems, setCartItems] = useState<CartItem[]>([])

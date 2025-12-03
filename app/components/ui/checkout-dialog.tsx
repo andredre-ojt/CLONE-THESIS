@@ -1,12 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { CreditCard, Banknote, CheckCircle2 } from "lucide-react"
-import { Button } from "./button"
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "./dialog"
-import { Label } from "./label"
-import { Input } from "./input"
-
+import { CreditCard, Banknote, CheckCircle2, X } from "lucide-react"
 
 interface CartItem {
     id: string
@@ -54,7 +49,7 @@ export function CheckoutDialog({ open, onClose, onComplete, total, items, onAddT
         // Simulate payment processing
         await new Promise((resolve) => setTimeout(resolve, 1500))
 
-        // Add transaction to history
+        // Add transaction to history with cashReceived for cash payments
         onAddTransaction({
             items: items.map((item) => ({
                 name: item.name,
@@ -63,6 +58,7 @@ export function CheckoutDialog({ open, onClose, onComplete, total, items, onAddT
             })),
             total,
             paymentMethod,
+            cashReceived: paymentMethod === "cash" ? getCashAmount() : undefined,
             change: paymentMethod === "cash" ? change : 0,
         })
 
@@ -73,73 +69,105 @@ export function CheckoutDialog({ open, onClose, onComplete, total, items, onAddT
             setProcessing(false)
             setSuccess(false)
             setCashReceived("")
+            setPaymentMethod("card")
             onComplete()
         }, 2000)
     }
 
+    const handleClose = () => {
+        if (!processing && !success) {
+            setCashReceived("")
+            setPaymentMethod("card")
+            onClose()
+        }
+    }
+
+    if (!open) return null
+
     return (
-        <Dialog open={open} onOpenChange={onClose}>
-            <DialogContent className="sm:max-w-md">
-                <DialogHeader>
-                    <DialogTitle>Complete Payment</DialogTitle>
-                    <DialogDescription>Select payment method and complete the transaction</DialogDescription>
-                </DialogHeader>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+            <div className="relative w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
+                <button
+                    onClick={handleClose}
+                    className="absolute right-4 top-4 rounded-sm opacity-70 hover:opacity-100 disabled:pointer-events-none"
+                    disabled={processing || success}
+                >
+                    <X className="h-4 w-4" />
+                </button>
+
+                <div className="mb-6">
+                    <h2 className="text-xl font-semibold">Complete Payment</h2>
+                    <p className="text-sm text-gray-500">Select payment method and complete the transaction</p>
+                </div>
 
                 {success ? (
                     <div className="flex flex-col items-center justify-center py-8">
-                        <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-accent">
-                            <CheckCircle2 className="h-8 w-8 text-accent-foreground" />
+                        <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
+                            <CheckCircle2 className="h-8 w-8 text-green-600" />
                         </div>
                         <h3 className="mb-2 text-xl font-semibold">Payment Successful!</h3>
-                        <p className="text-muted-foreground">Transaction completed</p>
+                        <p className="text-gray-500">Transaction completed</p>
                     </div>
                 ) : (
                     <div className="space-y-6">
                         <div>
-                            <Label className="mb-3 block text-sm font-medium">Payment Method</Label>
+                            <label className="mb-3 block text-sm font-medium">Payment Method</label>
                             <div className="grid grid-cols-2 gap-3">
-                                <Button
-                                    variant={paymentMethod === "card" ? "default" : "outline"}
-                                    className="h-20 flex-col gap-2"
+                                <button
+                                    className={`flex h-20 flex-col items-center justify-center gap-2 rounded-lg border-2 transition-colors ${paymentMethod === "card"
+                                            ? "border-black bg-black text-white"
+                                            : "border-gray-300 bg-white hover:bg-gray-50"
+                                        }`}
                                     onClick={() => setPaymentMethod("card")}
                                 >
                                     <CreditCard className="h-6 w-6" />
                                     <span>Card</span>
-                                </Button>
-                                <Button
-                                    variant={paymentMethod === "cash" ? "default" : "outline"}
-                                    className="h-20 flex-col gap-2"
+                                </button>
+                                <button
+                                    className={`flex h-20 flex-col items-center justify-center gap-2 rounded-lg border-2 transition-colors ${paymentMethod === "cash"
+                                            ? "border-black bg-black text-white"
+                                            : "border-gray-300 bg-white hover:bg-gray-50"
+                                        }`}
                                     onClick={() => setPaymentMethod("cash")}
                                 >
                                     <Banknote className="h-6 w-6" />
                                     <span>Cash</span>
-                                </Button>
+                                </button>
                             </div>
                         </div>
 
                         {paymentMethod === "cash" && (
                             <div className="space-y-4">
                                 <div>
-                                    <Label htmlFor="cash-received">Cash Received</Label>
-                                    <Input
+                                    <label htmlFor="cash-received" className="block text-sm font-medium mb-1.5">
+                                        Cash Received
+                                    </label>
+                                    <input
                                         id="cash-received"
                                         type="number"
                                         step="0.01"
                                         placeholder="0.00"
                                         value={cashReceived}
                                         onChange={(e) => setCashReceived(e.target.value)}
-                                        className="mt-1.5"
+                                        className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-black"
                                     />
                                 </div>
                                 {cashReceived && (
-                                    <div className={`rounded-lg p-3 ${isSufficientCash() ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'}`}>
+                                    <div
+                                        className={`rounded-lg border p-3 ${isSufficientCash()
+                                                ? "border-green-200 bg-green-50"
+                                                : "border-red-200 bg-red-50"
+                                            }`}
+                                    >
                                         {isSufficientCash() ? (
                                             <div className="flex justify-between">
                                                 <span className="font-semibold text-green-700">Change Due</span>
-                                                <span className="text-xl font-bold text-green-700">₱{change.toFixed(2)}</span>
+                                                <span className="text-xl font-bold text-green-700">
+                                                    ₱{change.toFixed(2)}
+                                                </span>
                                             </div>
                                         ) : (
-                                            <div className="flex justify-between items-center">
+                                            <div className="flex items-center justify-between">
                                                 <span className="text-sm text-red-700">Insufficient amount</span>
                                                 <span className="text-sm font-medium text-red-700">
                                                     Need ₱{(total - getCashAmount()).toFixed(2)} more
@@ -151,24 +179,28 @@ export function CheckoutDialog({ open, onClose, onComplete, total, items, onAddT
                             </div>
                         )}
 
-                        <div className="rounded-lg border bg-muted/30 p-4">
+                        <div className="rounded-lg border bg-gray-50 p-4">
                             <div className="flex justify-between">
                                 <span className="text-lg font-medium">Total Amount</span>
-                                <span className="text-2xl font-bold text-primary">₱{total.toFixed(2)}</span>
+                                <span className="text-2xl font-bold text-blue-600">₱{total.toFixed(2)}</span>
                             </div>
                         </div>
 
-                        <Button
-                            className="w-full"
-                            size="lg"
+                        <button
+                            className={`w-full rounded-lg px-4 py-3 text-lg font-semibold text-white transition-colors ${processing || (paymentMethod === "cash" && !isSufficientCash())
+                                    ? "cursor-not-allowed bg-gray-400"
+                                    : "bg-black hover:bg-gray-800"
+                                }`}
                             onClick={handleComplete}
                             disabled={processing || (paymentMethod === "cash" && !isSufficientCash())}
                         >
                             {processing ? "Processing..." : "Complete Payment"}
-                        </Button>
+                        </button>
                     </div>
                 )}
-            </DialogContent>
-        </Dialog>
+            </div>
+        </div>
     )
 }
+
+export default CheckoutDialog;

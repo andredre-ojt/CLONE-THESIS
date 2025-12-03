@@ -30,8 +30,8 @@ export function LoginForm({ onLogin }: LoginFormProps) {
         // Parent credentials: parent/parent123
         if (
             (username === "admin" && password === "admin") ||
-            (username === "staff" && password === "staff123") ||
-            (username === "parent" && password === "parent123")
+            (username === "staff" && password === "staff") ||
+            (username === "parent" && password === "parent")
         ) {
             // Store credentials in localStorage
             const role = username === "admin" ? "admin" : username === "staff" ? "staff" : "parent"
@@ -43,7 +43,9 @@ export function LoginForm({ onLogin }: LoginFormProps) {
 
             // Redirect based on role
             setTimeout(() => {
-                if (username === "staff") {
+                if (username === "admin") {
+                    window.location.href = "/admin-panel"
+                } else if (username === "staff") {
                     window.location.href = "/pos"
                 } else if (username === "parent") {
                     window.location.href = "/parent-dashboard"
@@ -120,8 +122,8 @@ export function LoginForm({ onLogin }: LoginFormProps) {
                         <div className="mt-6 space-y-2 rounded-md bg-gray-50 p-4 text-xs text-gray-600">
                             <p className="font-semibold text-gray-900">Demo Credentials:</p>
                             <p>Admin: admin / admin</p>
-                            <p>Staff: staff / staff123</p>
-                            <p>Parent: parent / parent123</p>
+                            <p>Staff: staff / staff</p>
+                            <p>Parent: parent / parent</p>
                         </div>
                     </div>
                 </div>
