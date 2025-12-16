@@ -1,6 +1,7 @@
 "use client"
 
 import { ArrowLeft, Calendar, CreditCard, Banknote } from "lucide-react"
+import React from 'react';
 
 interface TransactionItem {
     name: string
@@ -187,6 +188,7 @@ export default function TransactionHistoryDemo() {
             </div>
         );
     }
+    
 
     return (
         <div className="h-screen bg-gray-50">
@@ -195,8 +197,8 @@ export default function TransactionHistoryDemo() {
                 onClose={() => setShowHistory(false)}
             />
         </div>
+        
     );
+    
 }
 
-// Add React import for demo
-import React from 'react';

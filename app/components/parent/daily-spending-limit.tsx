@@ -54,7 +54,7 @@ export function DailySpendingLimit() {
 
   return (
     // FIX 1: Removed 'h-full' and 'justify-between'. Added 'h-fit' so it hugs content.
-    <div className="flex h-fit flex-col rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+    <div className="flex h-fit flex-col rounded-xl border border-gray-200 bg-white p-10 shadow-sm">
       
       {/* 1. Header */}
       <div className="flex items-center justify-between mb-3">

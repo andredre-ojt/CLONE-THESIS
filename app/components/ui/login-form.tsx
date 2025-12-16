@@ -35,7 +35,9 @@ export function LoginForm({ onLogin }: LoginFormProps) {
             (username === "parent" && password === "parent")
         ) {
             // Store credentials in localStorage
-            const role = username === "admin" ? "admin" : username === "staff" ? "staff" : "parent"
+            const role = username === "admin" ? "admin" : 
+            username === "staff" ? "staff" : 
+            username === "parent" ? "parent" : "guest" 
             localStorage.setItem("username", username)
             localStorage.setItem("role", role)
 
@@ -59,13 +61,13 @@ export function LoginForm({ onLogin }: LoginFormProps) {
     }
 
     return (
-        <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-red-950 via-red-900 to-red-800 p-4">
+        <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-red-950 via-red-900 to-red-900 p-4">
             <div className="w-full max-w-md rounded-xl border border-red-700 bg-white shadow-2xl">
                 <div className="space-y-3 p-6 text-center bg-gradient-to-r from-red-900 to-red-800 rounded-t-xl">
                     <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-white shadow-lg">
                         <ShoppingCart className="h-8 w-8 text-red-900" />
                     </div>
-                    <h2 className="text-2xl font-bold text-white">EduTap System</h2>
+                    <h2 className="text-2xl font-bold text-white">EDUTAP </h2>
                     <p className="text-sm text-red-100">St. Clare College of Caloocan</p>
                 </div>
                 <div className="p-6">
