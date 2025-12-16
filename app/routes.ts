@@ -3,7 +3,7 @@ import { type RouteConfig, index, layout, prefix, route } from "@react-router/de
 export default [
 	index("routes/login-page.tsx"),
 	route("/pos", "routes/page.tsx"),
-	route("/parent-dashboard", "routes/edutap-user.tsx"),
+	route("/parent-dashboard", "routes/parent-dashboard.tsx"),
 	route("/admin-panel", "routes/admin-panel.tsx"),
 
 	//adminpanel

@@ -1,7 +1,6 @@
 "use client"
 
-import { ShoppingCart, History, Clock, LogOut, UserIcon } from "lucide-react"
-import { Button } from "./button";
+import { ShoppingCart, History, Clock, LogOut, User } from "lucide-react"
 
 interface HeaderProps {
     user: { username: string; role: string } | null
@@ -9,6 +8,7 @@ interface HeaderProps {
     onShowHistory: () => void
     onShowUserPage?: () => void
 }
+
 const handleLogout = () => {
     localStorage.removeItem("username")
     localStorage.removeItem("role")
@@ -22,46 +22,83 @@ export function Header({ user, onLogout, onShowHistory, onShowUserPage }: Header
     })
 
     return (
-        <header className="flex items-center justify-between border-b bg-card px-6 py-4 shadow-sm">
-            <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
-                    <ShoppingCart className="h-5 w-5 text-primary-foreground" />
+        <header className="bg-gradient-to-r from-red-950 to-red-900 border-b border-red-900 px-6 py-4">
+            <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white">
+                        <ShoppingCart className="h-5 w-5 text-red-900" />
+                    </div>
+                    <div>
+                        <h1 className="text-lg font-semibold text-white">EDUTAP</h1>
+                        <p className="text-sm text-red-100">St. Clare College of Caloocan</p>
+                    </div>
                 </div>
-                <div>
-                    <h1 className="text-xl font-semibold text-foreground">Point of Sale</h1>
-                    <p className="text-sm text-muted-foreground">Retail System</p>
-                </div>
-            </div>
 
-            <div className="flex items-center gap-4">
-                {user && (
-                    <Button
-                        variant="ghost"
-                        className={`flex items-center gap-2 rounded-md px-3 py-1.5 text-sm hover:bg-muted ${onShowUserPage ? "cursor-pointer" : "cursor-default hover:bg-transparent"
+                <div className="flex items-center gap-4">
+                    {user && (
+                        <button
+                            className={`flex items-center gap-2 rounded-md px-3 py-1.5 text-sm text-white hover:bg-red-800 transition ${
+                                onShowUserPage ? "cursor-pointer" : "cursor-default hover:bg-transparent"
                             }`}
-                        onClick={onShowUserPage}
+                            onClick={onShowUserPage}
+                        >
+                            <User className="h-4 w-4 text-red-100" />
+                            <span className="font-medium">{user.username}</span>
+                            <span className="text-xs text-red-100 capitalize">({user.role})</span>
+                        </button>
+                    )}
+                    <div className="flex items-center gap-2 text-sm text-red-100">
+                        <Clock className="h-4 w-4" />
+                        <span className="font-mono">{currentTime}</span>
+                    </div>
+                    <button
+                        onClick={onShowHistory}
+                        className="flex items-center gap-2 rounded-lg bg-white/10 backdrop-blur-sm border border-white/20 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/20"
                     >
-                        <UserIcon className="h-4 w-4 text-muted-foreground" />
-                        <span className="font-medium">{user.username}</span>
-                        <span className="text-xs text-muted-foreground capitalize">({user.role})</span>
-                    </Button>
-                )}
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Clock className="h-4 w-4" />
-                    <span className="font-mono">{currentTime}</span>
+                        <History className="h-4 w-4" />
+                        History
+                    </button>
+                    <button
+                        onClick={handleLogout}
+                        className="flex items-center gap-2 rounded-lg bg-white border border-white px-4 py-2 text-sm font-semibold text-red-900 transition hover:bg-red-50"
+                    >
+                        <LogOut className="w-4 h-4" />
+                        <span>Logout</span>
+                    </button>
                 </div>
-                <Button variant="outline" size="sm" onClick={onShowHistory}>
-                    <History className="mr-2 h-4 w-4" />
-                    History
-                </Button>
-                <button
-                    onClick={handleLogout}
-                    className="flex items-center gap-2 rounded-lg border border-red-300 px-4 py-2 text-sm font-semibold text-red-600 transition hover:bg-red-50 hover:border-red-400"
-                >
-                    <LogOut className="w-4 h-4" />
-                    <span>Logout</span>
-                </button>
             </div>
         </header>
+    )
+}
+
+// Demo Component
+export default function App() {
+    const handleShowHistory = () => {
+        console.log('Show history')
+    }
+
+    const handleShowUserPage = () => {
+        console.log('Show user page')
+    }
+
+    const handleLogoutDemo = () => {
+        console.log('Logging out...')
+    }
+
+    return (
+        <div className="min-h-screen bg-gray-50">
+            <Header 
+                user={{ username: "John Doe", role: "cashier" }}
+                onLogout={handleLogoutDemo}
+                onShowHistory={handleShowHistory}
+                onShowUserPage={handleShowUserPage}
+            />
+            <div className="p-8">
+                <div className="bg-white rounded-lg border border-gray-200 p-6">
+                    <h2 className="text-xl font-semibold mb-2">POS Dashboard</h2>
+                    <p className="text-gray-600">Your point of sale content goes here...</p>
+                </div>
+            </div>
+        </div>
     )
 }

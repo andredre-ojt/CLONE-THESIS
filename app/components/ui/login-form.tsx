@@ -26,8 +26,9 @@ export function LoginForm({ onLogin }: LoginFormProps) {
             return
         }
 
-        // Admin credentials: admin/admin or staff/staff123
-        // Parent credentials: parent/parent123
+        // Admin credentials: admin/admin
+        // Staff credentials: staff/staff
+        // Parent credentials: parent/parent
         if (
             (username === "admin" && password === "admin") ||
             (username === "staff" && password === "staff") ||
@@ -58,16 +59,17 @@ export function LoginForm({ onLogin }: LoginFormProps) {
     }
 
     return (
-        <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-purple-50 to-indigo-50 p-4">
-            <div className="w-full max-w-md rounded-xl border border-gray-200 bg-white shadow-xl">
-                <div className="space-y-3 p-6 text-center">
-                    <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-gray-900">
-                        <ShoppingCart className="h-8 w-8 text-white" />
+        <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-red-950 via-red-900 to-red-800 p-4">
+            <div className="w-full max-w-md rounded-xl border border-red-700 bg-white shadow-2xl">
+                <div className="space-y-3 p-6 text-center bg-gradient-to-r from-red-900 to-red-800 rounded-t-xl">
+                    <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-white shadow-lg">
+                        <ShoppingCart className="h-8 w-8 text-red-900" />
                     </div>
-                    <h2 className="text-2xl font-bold text-gray-900">EduTap System</h2>
-                    <p className="text-sm text-gray-500">Sign in to access your dashboard</p>
+                    <h2 className="text-2xl font-bold text-white">EduTap System</h2>
+                    <p className="text-sm text-red-100">St. Clare College of Caloocan</p>
                 </div>
-                <div className="p-6 pt-0">
+                <div className="p-6">
+                    <p className="text-center text-sm text-gray-600 mb-6">Sign in to access your dashboard</p>
                     <div className="space-y-4">
                         <div className="space-y-2">
                             <label htmlFor="username" className="text-sm font-medium text-gray-700">
@@ -83,7 +85,7 @@ export function LoginForm({ onLogin }: LoginFormProps) {
                                 autoComplete="username"
                                 autoFocus
                                 disabled={isLoading}
-                                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-200 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-red-800 focus:outline-none focus:ring-2 focus:ring-red-200 disabled:bg-gray-100 disabled:cursor-not-allowed"
                             />
                         </div>
                         <div className="space-y-2">
@@ -99,12 +101,12 @@ export function LoginForm({ onLogin }: LoginFormProps) {
                                 onKeyDown={(e) => e.key === "Enter" && handleSubmit(e)}
                                 autoComplete="current-password"
                                 disabled={isLoading}
-                                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-200 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-red-800 focus:outline-none focus:ring-2 focus:ring-red-200 disabled:bg-gray-100 disabled:cursor-not-allowed"
                             />
                         </div>
 
                         {error && (
-                            <div className="flex items-center gap-2 rounded-md bg-red-50 p-3 text-sm text-red-600">
+                            <div className="flex items-center gap-2 rounded-md bg-red-50 p-3 text-sm text-red-600 border border-red-200">
                                 <AlertCircle className="h-4 w-4" />
                                 <span>{error}</span>
                             </div>
@@ -114,13 +116,13 @@ export function LoginForm({ onLogin }: LoginFormProps) {
                             type="button"
                             onClick={handleSubmit}
                             disabled={isLoading}
-                            className="w-full rounded-lg bg-gray-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-gray-800 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                            className="w-full rounded-lg bg-gradient-to-r from-red-900 to-red-800 px-4 py-2.5 text-sm font-semibold text-white transition hover:from-red-800 hover:to-red-700 disabled:bg-gray-400 disabled:cursor-not-allowed shadow-md"
                         >
                             {isLoading ? "Signing in..." : "Sign In"}
                         </button>
 
-                        <div className="mt-6 space-y-2 rounded-md bg-gray-50 p-4 text-xs text-gray-600">
-                            <p className="font-semibold text-gray-900">Demo Credentials:</p>
+                        <div className="mt-6 space-y-2 rounded-md bg-red-50 border border-red-200 p-4 text-xs text-gray-700">
+                            <p className="font-semibold text-red-900">Demo Credentials:</p>
                             <p>Admin: admin / admin</p>
                             <p>Staff: staff / staff</p>
                             <p>Parent: parent / parent</p>
@@ -130,4 +132,12 @@ export function LoginForm({ onLogin }: LoginFormProps) {
             </div>
         </div>
     )
+}
+
+export default function App() {
+    const handleLogin = (username: string) => {
+        console.log('Logged in as:', username)
+    }
+
+    return <LoginForm onLogin={handleLogin} />
 }
