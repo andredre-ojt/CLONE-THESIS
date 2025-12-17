@@ -1,3 +1,5 @@
+import { useState } from 'react'
+
 interface Transaction {
     orderId: string
     staff: string
@@ -23,6 +25,19 @@ export function TransactionsTable({
     activeFilter,
     onFilterChange
 }: TransactionsTableProps) {
+    const getStatusColor = (status: 'Completed' | 'Pending' | 'Voided') => {
+        switch (status) {
+            case 'Completed':
+                return 'bg-green-100 text-green-800'
+            case 'Pending':
+                return 'bg-yellow-100 text-yellow-800'
+            case 'Voided':
+                return 'bg-red-100 text-red-800'
+            default:
+                return 'bg-gray-100 text-gray-800'
+        }
+    }
+
     return (
         <div className="bg-white rounded-lg border border-gray-200">
             <div className="p-6 border-b border-gray-200">
@@ -88,7 +103,7 @@ export function TransactionsTable({
                                     <td className="py-3 px-4 text-sm">{transaction.items}</td>
                                     <td className="py-3 px-4 text-sm font-medium">{transaction.total}</td>
                                     <td className="py-3 px-4">
-                                        <span className="inline-block px-3 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">
+                                        <span className={`inline-block px-3 py-1 text-xs font-medium rounded-full ${getStatusColor(transaction.status)}`}>
                                             {transaction.status}
                                         </span>
                                     </td>
@@ -98,6 +113,37 @@ export function TransactionsTable({
                     </table>
                 </div>
             </div>
+        </div>
+    )
+}
+
+export default function App() {
+    const [searchQuery, setSearchQuery] = useState('')
+    const [activeFilter, setActiveFilter] = useState<FilterType>('All')
+
+    const transactions: Transaction[] = [
+        { orderId: '202251101', staff: 'admin (Staff)', items: '2 Fruit Juice', total: '₱12,500.00', status: 'Completed' },
+        { orderId: '202251210', staff: 'admin (Staff)', items: 'Coffee, Caesar Salad', total: '₱330.00', status: 'Pending' },
+        { orderId: '202251205', staff: 'admin (Staff)', items: 'Veggie Wrap, Coffee', total: '₱350.00', status: 'Voided' },
+    ]
+
+    const filteredTransactions = transactions.filter(t => {
+        const matchesSearch = t.orderId.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            t.staff.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            t.items.toLowerCase().includes(searchQuery.toLowerCase())
+        const matchesFilter = activeFilter === 'All' || t.status === activeFilter
+        return matchesSearch && matchesFilter
+    })
+
+    return (
+        <div className="min-h-screen bg-gray-50 p-8">
+            <TransactionsTable 
+                transactions={filteredTransactions}
+                searchQuery={searchQuery}
+                onSearchChange={setSearchQuery}
+                activeFilter={activeFilter}
+                onFilterChange={setActiveFilter}
+            />
         </div>
     )
 }

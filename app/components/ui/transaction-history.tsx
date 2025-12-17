@@ -25,9 +25,9 @@ interface TransactionHistoryProps {
 
 export function TransactionHistory({ transactions, onClose }: TransactionHistoryProps) {
     return (
-        <div className="flex h-full flex-col">
+        <div className="flex h-screen flex-col bg-gray-50">
             {/* Fixed Header */}
-            <div className="border-b bg-white p-6 flex-shrink-0">
+            <div className="border-b bg-white p-6 flex-shrink-0 shadow-sm">
                 <div className="flex items-center gap-4">
                     <button
                         onClick={onClose}
@@ -43,7 +43,7 @@ export function TransactionHistory({ transactions, onClose }: TransactionHistory
             </div>
 
             {/* Scrollable Content */}
-            <div className="flex-1 overflow-y-auto p-6">
+            <div className="flex-1 overflow-y-auto p-6 bg-gray-50">
                 {transactions.length === 0 ? (
                     <div className="flex h-96 flex-col items-center justify-center text-gray-500">
                         <Calendar className="mb-3 h-12 w-12" />
@@ -191,7 +191,7 @@ export default function TransactionHistoryDemo() {
     
 
     return (
-        <div className="h-screen bg-gray-50">
+        <div className="fixed inset-0 bg-gray-50 z-50">
             <TransactionHistory
                 transactions={sampleTransactions}
                 onClose={() => setShowHistory(false)}
@@ -201,4 +201,3 @@ export default function TransactionHistoryDemo() {
     );
     
 }
-

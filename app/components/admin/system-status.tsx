@@ -34,6 +34,7 @@ export function SystemStatus({ activeStaff, openRegisters, onViewAllActivity }: 
             >
                 View All Activity
             </button>
+            
         </div>
     )
 }
