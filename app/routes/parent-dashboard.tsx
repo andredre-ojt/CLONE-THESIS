@@ -228,7 +228,7 @@ export default function ParentDashboard() {
 
             {/* Header */}
             <ParentHeader 
-                username="admin"
+                username="Parent"
                 currentTime={currentTime}
                 onShare={handleShare}
                 onLogout={handleLogout}

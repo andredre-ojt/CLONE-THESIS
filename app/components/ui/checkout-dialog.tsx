@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { CreditCard, Banknote, CheckCircle2, X } from "lucide-react"
 
 interface CartItem {
@@ -26,6 +26,7 @@ export function CheckoutDialog({ open, onClose, onComplete, total, items, onAddT
     const [cashReceived, setCashReceived] = useState("")
     const [processing, setProcessing] = useState(false)
     const [success, setSuccess] = useState(false)
+    const [waitingForCard, setWaitingForCard] = useState(false)
 
     const getCashAmount = () => {
         return Number.parseFloat(cashReceived || "0")
@@ -44,12 +45,19 @@ export function CheckoutDialog({ open, onClose, onComplete, total, items, onAddT
     const change = calculateChange()
 
     const handleComplete = async () => {
+        if (paymentMethod === "card") {
+            // Show RFID tap modal for card payments
+            setWaitingForCard(true)
+            return
+        }
+
+        // For cash payments, process immediately
         setProcessing(true)
 
         // Simulate payment processing
         await new Promise((resolve) => setTimeout(resolve, 1500))
 
-        // Add transaction to history with cashReceived for cash payments
+        // Add transaction to history
         onAddTransaction({
             items: items.map((item) => ({
                 name: item.name,
@@ -74,13 +82,57 @@ export function CheckoutDialog({ open, onClose, onComplete, total, items, onAddT
         }, 2000)
     }
 
+    const handleCardTap = async () => {
+        setWaitingForCard(false)
+        setProcessing(true)
+
+        // Simulate card processing
+        await new Promise((resolve) => setTimeout(resolve, 1500))
+
+        // Add transaction to history
+        onAddTransaction({
+            items: items.map((item) => ({
+                name: item.name,
+                quantity: item.quantity,
+                price: item.price,
+            })),
+            total,
+            paymentMethod: "card",
+            cashReceived: undefined,
+            change: 0,
+        })
+
+        setSuccess(true)
+
+        // Reset and close after showing success
+        setTimeout(() => {
+            setProcessing(false)
+            setSuccess(false)
+            setCashReceived("")
+            setPaymentMethod("card")
+            onComplete()
+        }, 2000)
+    }
+
     const handleClose = () => {
-        if (!processing && !success) {
+        if (!processing && !success && !waitingForCard) {
             setCashReceived("")
             setPaymentMethod("card")
             onClose()
         }
     }
+
+    // Add event listener for key press (RFID tap simulation)
+    useEffect(() => {
+        if (waitingForCard) {
+            const handleKeyPress = (e: KeyboardEvent) => {
+                e.preventDefault()
+                handleCardTap()
+            }
+            window.addEventListener("keydown", handleKeyPress)
+            return () => window.removeEventListener("keydown", handleKeyPress)
+        }
+    }, [waitingForCard])
 
     if (!open) return null
 
@@ -90,17 +142,43 @@ export function CheckoutDialog({ open, onClose, onComplete, total, items, onAddT
                 <button
                     onClick={handleClose}
                     className="absolute right-4 top-4 rounded-sm opacity-70 hover:opacity-100 disabled:pointer-events-none"
-                    disabled={processing || success}
+                    disabled={processing || success || waitingForCard}
                 >
                     <X className="h-4 w-4" />
                 </button>
 
                 <div className="mb-6">
-                    <h2 className="text-xl font-semibold">Complete Payment</h2>
-                    <p className="text-sm text-gray-500">Select payment method and complete the transaction</p>
+                    <h2 className="text-xl font-semibold">
+                        {waitingForCard ? "Tap Your Card" : "Complete Payment"}
+                    </h2>
+                    <p className="text-sm text-gray-500">
+                        {waitingForCard
+                            ? "Please tap your RFID card on the reader"
+                            : "Select payment method and complete the transaction"}
+                    </p>
                 </div>
 
-                {success ? (
+                {waitingForCard ? (
+                    <div className="flex flex-col items-center justify-center py-8">
+                        <div className="mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-blue-100 animate-pulse">
+                            <CreditCard className="h-12 w-12 text-blue-600" />
+                        </div>
+                        <h3 className="mb-2 text-xl font-semibold">Waiting for Card</h3>
+                        <p className="text-center text-gray-500 mb-4">Tap your RFID card to complete payment</p>
+                        <div className="rounded-lg border bg-gray-50 p-4 w-full">
+                            <div className="flex justify-between">
+                                <span className="text-lg font-medium">Amount to Pay</span>
+                                <span className="text-2xl font-bold text-blue-600">₱{total.toFixed(2)}</span>
+                            </div>
+                        </div>
+                        <button
+                            onClick={() => setWaitingForCard(false)}
+                            className="mt-4 text-sm text-gray-600 hover:text-gray-800 underline"
+                        >
+                            Cancel
+                        </button>
+                    </div>
+                ) : success ? (
                     <div className="flex flex-col items-center justify-center py-8">
                         <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
                             <CheckCircle2 className="h-8 w-8 text-green-600" />
@@ -203,4 +281,4 @@ export function CheckoutDialog({ open, onClose, onComplete, total, items, onAddT
     )
 }
 
-export default CheckoutDialog;
+export default CheckoutDialog

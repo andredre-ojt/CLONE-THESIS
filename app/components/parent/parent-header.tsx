@@ -22,7 +22,7 @@ export function ParentHeader({ username, currentTime, onShare, onLogout }: Paren
                 </div>
 
                 <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 px-3 py-1.5 text-sm">
+                    <div className="flex items-center gap-2 px-3 py-1.5 text-sm">
                         <span className="text-white">{username} (Parent)</span>
                     </div>
                     <div className="flex items-center gap-2 text-sm text-red-100">
